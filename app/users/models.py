@@ -1,6 +1,7 @@
+from core.models import BaseModel
+
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-
 
 
 class User(AbstractUser):
@@ -16,3 +17,7 @@ class User(AbstractUser):
     def generate_referal_code(self):
         if not self.my_referal_code:
             self.my_referal_code = f"RFRC{self.pk}"
+
+
+# class Referal(BaseModel):
+#     user_id
