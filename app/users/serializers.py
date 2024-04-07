@@ -36,13 +36,13 @@ class RegisterSerializer(serializers.ModelSerializer):
         )
         user.set_password(self.validated_data["password"])
         user.generate_referal_code()
-        user.save()
         if "referal_code" in self.validated_data:
             referal_code = self.validated_data["referal_code"]
             referer = User.objects.get(my_referal_code__iexact=referal_code)
-            referer.referals.add(user)
             referer.referal_points += 1
             referer.save()
+            user.referer = referer
+        user.save()
         return user
 
 

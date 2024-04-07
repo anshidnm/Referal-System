@@ -98,4 +98,4 @@ class ReferalsView(ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return self.queryset.filter(referals=self.request.user.id)
+        return self.queryset.filter(referer=self.request.user)
