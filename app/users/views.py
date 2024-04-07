@@ -25,5 +25,8 @@ class RegisterView(CreateAPIView):
             else:
                 return Response(ser.errors, status=status.HTTP_400_BAD_REQUEST)
         except:
-            pass
+            return Response(
+                {"message": "something went wrong"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
         return super().create(request, *args, **kwargs)
