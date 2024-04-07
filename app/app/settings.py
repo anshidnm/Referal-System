@@ -150,7 +150,8 @@ SIMPLE_JWT = {
 SPECTACULAR_SETTINGS = {
     "TITLE": "REFERAL SYSTEM",
     "DESCRIPTION": "API Documentaion",
-    "VERSION": "1.0.0"
+    "VERSION": "1.0.0",
+    "COMPONENT_SPLIT_REQUEST": True
 }
 
 #REST Framework settings

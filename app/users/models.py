@@ -2,15 +2,17 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 
+
 class User(AbstractUser):
     username = None
-    name = models.CharField(max_length=100, unique=True)
-    referal_code = models.CharField(max_length=250, null=True, blank=True)
+    email = models.EmailField(unique=True)
+    name = models.CharField(max_length=100)
+    my_referal_code = models.CharField(max_length=250, null=True, blank=True)
+    referal_points = models.PositiveBigIntegerField(default=0)
 
-    USERNAME_FIELD = "name"
-    REQUIRED_FIELDS = ["email"]
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["name"]
 
     def generate_referal_code(self):
-        if not self.referal_code:
-            self.referal_code = f"RFRC{self.pk}"
-            self.save()
+        if not self.my_referal_code:
+            self.my_referal_code = f"RFRC{self.pk}"
