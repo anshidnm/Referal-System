@@ -12,6 +12,7 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import User
+from .schemas import Documentation
 from .serializers import (
     RegisterSerializer,
     LoginSerializer,
@@ -19,6 +20,7 @@ from .serializers import (
 )
 
 
+@Documentation.REGISTER
 class RegisterView(CreateAPIView):
     queryset = User.objects.all()
     serializer_class = RegisterSerializer
@@ -28,10 +30,13 @@ class RegisterView(CreateAPIView):
             ser = self.get_serializer(data=request.data)
             if ser.is_valid():
                 user = ser.save()
+                token = RefreshToken.for_user(user)
                 return Response(
                     {
                         "user_id": user.id,
-                        "message": "user registered successfully"
+                        "message": "user registered successfully",
+                        "refresh": str(token),
+                        "access": str(token.access_token)
                     }
                 )
             else:
@@ -43,6 +48,7 @@ class RegisterView(CreateAPIView):
             )
 
 
+@Documentation.LOGIN
 class LoginView(CreateAPIView):
     serializer_class = LoginSerializer
 
@@ -73,6 +79,7 @@ class LoginView(CreateAPIView):
             )
 
 
+@Documentation.MY_DETAILS
 class UserDetailsView(GenericAPIView):
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
@@ -83,6 +90,7 @@ class UserDetailsView(GenericAPIView):
         return Response(ser.data)
 
 
+@Documentation.REFERALS
 class ReferalsView(ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
