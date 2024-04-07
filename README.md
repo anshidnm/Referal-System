@@ -3,6 +3,9 @@
 
 It is a referal management system made by django rest framework.
 
+For easy installation the enviroment variables (.env file) was pushed into github
+even this is a public repo.
+
 ## Installation
 
 Run referal system by follwing commands
