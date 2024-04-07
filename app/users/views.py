@@ -37,7 +37,8 @@ class RegisterView(CreateAPIView):
                         "message": "user registered successfully",
                         "refresh": str(token),
                         "access": str(token.access_token)
-                    }
+                    },
+                    status=status.HTTP_201_CREATED
                 )
             else:
                 return Response(ser.errors, status=status.HTTP_400_BAD_REQUEST)
