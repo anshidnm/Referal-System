@@ -10,6 +10,7 @@ class User(AbstractUser):
     name = models.CharField(max_length=100)
     my_referal_code = models.CharField(max_length=250, null=True, blank=True)
     referal_points = models.PositiveBigIntegerField(default=0)
+    referals = models.ManyToManyField("self")
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["name"]
@@ -17,7 +18,3 @@ class User(AbstractUser):
     def generate_referal_code(self):
         if not self.my_referal_code:
             self.my_referal_code = f"RFRC{self.pk}"
-
-
-# class Referal(BaseModel):
-#     user_id

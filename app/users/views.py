@@ -1,14 +1,22 @@
 from django.contrib.auth import authenticate
 
 from rest_framework import status
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import (
+    CreateAPIView, 
+    GenericAPIView, 
+    ListAPIView
+)
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import User
-from .serializers import RegisterSerializer, LoginSerializer
+from .serializers import (
+    RegisterSerializer,
+    LoginSerializer,
+    UserSerializer
+)
 
 
 class RegisterView(CreateAPIView):
@@ -64,3 +72,21 @@ class LoginView(CreateAPIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
+
+class UserDetailsView(GenericAPIView):
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        ser = self.get_serializer(user, many=False)
+        return Response(ser.data)
+
+
+class ReferalsView(ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return self.queryset.filter(referals=self.request.user.id)

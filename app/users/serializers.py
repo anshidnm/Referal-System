@@ -30,10 +30,6 @@ class RegisterSerializer(serializers.ModelSerializer):
         return super().validate(attrs)
     
     def save(self, **kwargs):
-        if "referal_code" in self.validated_data:
-            referal_code = self.validated_data["referal_code"]
-            referer = User.objects.filter(my_referal_code__iexact=referal_code)
-
         user = User.objects.create(
             name=self.validated_data["name"],
             email=self.validated_data["email"],
@@ -41,6 +37,12 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.set_password(self.validated_data["password"])
         user.generate_referal_code()
         user.save()
+        if "referal_code" in self.validated_data:
+            referal_code = self.validated_data["referal_code"]
+            referer = User.objects.get(my_referal_code__iexact=referal_code)
+            referer.referals.add(user)
+            referer.referal_points += 1
+            referer.save()
         return user
 
 
@@ -56,9 +58,7 @@ class UserSerializer(serializers.ModelSerializer):
         fields = [
             "name",
             "email",
-            "password",
-            "referal_code",
+            "my_referal_code",
             "referal_points",
             "date_joined",
         ]
-        read_only_fields = ["referal_code", "date_joined"]
